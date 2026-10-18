@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111816" />
+  <title>Answer Key — CS 05 Chapter 5: Sorting and Divide-and-Conquer</title>
+  <meta name="description" content="Complete 30-item answer key, mathematical derivations, and classroom talking points for CS 05 Chapter 5: Sorting and Divide-and-Conquer." />
+
+  <!-- KaTeX for math notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --paper: #f3f0e7;
+      --paper-bright: #fffdf7;
+      --ink: #111816;
+      --muted: #59645f;
+      --line: #c6c5bc;
+      --actual: #245f80;     /* Ocean / Slate Cyan */
+      --growth: #ae6a12;     /* Amber */
+      --result: #27705a;     /* Emerald Success */
+      --danger: #b54132;     /* Crimson */
+      --focus: #e8b84e;      /* Gold */
+      --dark-bg: #0d1311;
+      --card-dark: #151d1a;
+      --card-border: #23312c;
+      --text-light: #e6ede9;
+      --text-muted: #8b9993;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-light);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.55;
+      padding-bottom: 80px;
+    }
+
+    a {
+      color: #64b5f6;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    /* Top Nav / Header */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 0 24px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .brand-kicker {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #4ea3a1;
+    }
+    .brand-title {
+      font-size: 26px;
+      font-family: Georgia, serif;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: #245f80;
+      color: #ffffff;
+      border-color: #245f80;
+    }
+    .btn-primary:hover {
+      background: #1b4760;
+    }
+    .btn-secondary {
+      background: #1e2825;
+      color: #e6ede9;
+      border-color: #31423d;
+    }
+    .btn-secondary:hover {
+      background: #283732;
+      border-color: #435a53;
+    }
+    .btn-accent {
+      background: #ae6a12;
+      color: #ffffff;
+    }
+    .btn-accent:hover {
+      background: #91570d;
+    }
+
+    /* Summary & Rule Badge Card */
+    .summary-card {
+      background: linear-gradient(135deg, #17221e 0%, #111a17 100%);
+      border: 1px solid #2e433c;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 28px 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #23332e;
+    }
+    .rule-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      background: rgba(39, 112, 90, 0.25);
+      border: 1px solid #27705a;
+      color: #5ed6b0;
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .stat-item {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid #23332e;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .stat-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    /* Quick Answer Key Matrix */
+    .matrix-section {
+      margin: 28px 0;
+      background: var(--card-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .matrix-title {
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4ea3a1;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+      gap: 8px;
+    }
+    .matrix-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      border-radius: 6px;
+      background: #1a2521;
+      border: 1px solid #283933;
+      text-decoration: none !important;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .matrix-chip:hover {
+      background: #253630;
+      border-color: #3d554c;
+      transform: translateY(-2px);
+    }
+    .matrix-q-num {
+      font-size: 11px;
+      font-family: ui-monospace, monospace;
+      color: var(--text-muted);
+    }
+    .matrix-q-ans {
+      font-size: 18px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+    .ans-A { color: #5ea58e; }
+    .ans-B { color: #dfa15a; }
+    .ans-C { color: #4ea3a1; }
+    .ans-D { color: #64b5f6; }
+
+    /* Filter & Search Bar */
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 24px 0;
+      padding: 14px;
+      background: #141c19;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+    }
+    .search-input {
+      flex: 1 1 260px;
+      padding: 10px 14px;
+      font-size: 14px;
+      background: #090e0c;
+      border: 1px solid #283933;
+      border-radius: 6px;
+      color: #ffffff;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: #4ea3a1;
+    }
+    .topic-select {
+      flex: 1 1 240px;
+      padding: 10px 14px;
+      font-size: 14px;
+      background: #090e0c;
+      border: 1px solid #283933;
+      border-radius: 6px;
+      color: #ffffff;
+      outline: none;
+    }
+
+    /* Question Cards */
+    .questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .q-card {
+      background: var(--card-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 24px;
+      transition: border-color 0.2s ease;
+      scroll-margin-top: 20px;
+    }
+    .q-card:hover {
+      border-color: #39524a;
+    }
+    .q-card.highlight {
+      outline: 2px solid var(--focus);
+    }
+    .q-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .q-topic-tag {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4ea3a1;
+      background: rgba(78, 163, 161, 0.15);
+      border: 1px solid rgba(78, 163, 161, 0.3);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .q-key-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 4px;
+      background: #27705a;
+      color: #ffffff;
+    }
+    .q-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    .q-options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: #111715;
+      border: 1px solid #1f2d28;
+      font-size: 14px;
+      color: #c9d6d0;
+    }
+    .option-item.correct-answer {
+      background: rgba(39, 112, 90, 0.25);
+      border: 1px solid #27705a;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .option-letter-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      background: #1c2723;
+      border: 1px solid #2d3e38;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-light);
+    }
+    .option-item.correct-answer .option-letter-badge {
+      background: #27705a;
+      border-color: #3bb390;
+      color: #ffffff;
+    }
+    .correct-tag {
+      margin-left: auto;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #5ed6b0;
+      background: rgba(39, 112, 90, 0.4);
+      padding: 2px 8px;
+      border-radius: 4px;
+      align-self: center;
+    }
+
+    /* Explanation & Talking Point Boxes */
+    .explanation-box {
+      background: #121a17;
+      border-left: 4px solid #27705a;
+      border-radius: 0 6px 6px 0;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .box-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5ed6b0;
+      margin-bottom: 6px;
+    }
+    .talking-point-box {
+      background: #181914;
+      border-left: 4px solid #ae6a12;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: #dfb37c;
+    }
+    .talking-point-box .box-label {
+      color: #f0b769;
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 12pt;
+      }
+      .top-actions, .controls-bar, .matrix-section, .btn {
+        display: none !important;
+      }
+      .q-card {
+        background: #ffffff !important;
+        border: 1px solid #ccc !important;
+        color: #000000 !important;
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+        padding: 16px;
+      }
+      .q-title {
+        color: #000000 !important;
+      }
+      .option-item {
+        background: #ffffff !important;
+        border: 1px solid #eee !important;
+        color: #000000 !important;
+      }
+      .option-item.correct-answer {
+        border: 2px solid #27705a !important;
+        background: #f0fdf4 !important;
+        color: #000000 !important;
+      }
+      .explanation-box {
+        background: #f8faf9 !important;
+        color: #000000 !important;
+        border-left: 4px solid #27705a !important;
+      }
+      .talking-point-box {
+        background: #fffcf5 !important;
+        color: #000000 !important;
+        border-left: 4px solid #ae6a12 !important;
+      }
+      .summary-card {
+        background: #ffffff !important;
+        border: 1px solid #000 !important;
+        color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Top Header -->
+    <header class="top-nav">
+      <div class="brand">
+        <span class="brand-kicker">CS 05 • Core Algorithms &amp; Complexity</span>
+        <h1 class="brand-title">Chapter 5: Official Master Answer Key</h1>
+      </div>
+      <div class="top-actions">
+        <a href="index.html" class="btn btn-secondary">← Back to Presentation Deck</a>
+        <button onclick="window.print()" class="btn btn-secondary">🖨️ Print / Save PDF</button>
+        <a href="index.html" onclick="localStorage.setItem('autoOpenQuiz', 'true')" class="btn btn-primary">⏱️ Launch Interactive Quiz</a>
+      </div>
+    </header>
+
+    <!-- Summary & Verification Card -->
+    <section class="summary-card">
+      <div class="summary-header">
+        <div>
+          <h2 style="font-size: 20px; color: #ffffff; margin-bottom: 4px;">Assessment Specifications &amp; Quality Guarantee</h2>
+          <p style="font-size: 14px; color: var(--text-muted);">
+            Comprehensive 30-item multiple-choice curriculum assessment designed for teaching, mastery, and examination review.
+          </p>
+        </div>
+        <div class="rule-pill">
+          ✓ Non-Repeating Sequence Rule: PASSED
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-label">Total Questions</div>
+          <div class="stat-val">30 Items</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Consecutive Repetitions</div>
+          <div class="stat-val" style="color: #5ed6b0;">0 Violations</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Answer Distribution</div>
+          <div class="stat-val" style="font-size: 16px; font-family: ui-monospace, monospace; margin-top: 8px;">
+            A: 8 &nbsp;|&nbsp; B: 7 &nbsp;|&nbsp; C: 7 &nbsp;|&nbsp; D: 8
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Core Topics Covered</div>
+          <div class="stat-val">8 Topics</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Navigation Matrix -->
+    <section class="matrix-section">
+      <div class="matrix-title">
+        <span>⚡ Quick Answer Key Matrix (Click item to jump)</span>
+        <span style="font-size: 12px; color: var(--text-muted); font-weight: normal; text-transform: none;">
+          Every question's correct letter differs from the preceding question
+        </span>
+      </div>
+      <div class="matrix-grid">
+        <a href="#q-1" class="matrix-chip" title="Jump to Question 1: Selection Sort Algorithm">
+            <span class="matrix-q-num">Q01</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+        <a href="#q-2" class="matrix-chip" title="Jump to Question 2: Selection Sort Algorithm">
+            <span class="matrix-q-num">Q02</span>
+            <span class="matrix-q-ans ans-C">C</span>
+          </a>
+        <a href="#q-3" class="matrix-chip" title="Jump to Question 3: Selection Sort Algorithm">
+            <span class="matrix-q-num">Q03</span>
+            <span class="matrix-q-ans ans-B">B</span>
+          </a>
+        <a href="#q-4" class="matrix-chip" title="Jump to Question 4: Selection Sort Algorithm">
+            <span class="matrix-q-num">Q04</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-5" class="matrix-chip" title="Jump to Question 5: Selection Sort Time Complexity">
+            <span class="matrix-q-num">Q05</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+        <a href="#q-6" class="matrix-chip" title="Jump to Question 6: Selection Sort Time Complexity">
+            <span class="matrix-q-num">Q06</span>
+            <span class="matrix-q-ans ans-C">C</span>
+          </a>
+        <a href="#q-7" class="matrix-chip" title="Jump to Question 7: Selection Sort Time Complexity">
+            <span class="matrix-q-num">Q07</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-8" class="matrix-chip" title="Jump to Question 8: Insertion Sort Algorithm">
+            <span class="matrix-q-num">Q08</span>
+            <span class="matrix-q-ans ans-B">B</span>
+          </a>
+        <a href="#q-9" class="matrix-chip" title="Jump to Question 9: Insertion Sort Algorithm">
+            <span class="matrix-q-num">Q09</span>
+            <span class="matrix-q-ans ans-C">C</span>
+          </a>
+        <a href="#q-10" class="matrix-chip" title="Jump to Question 10: Insertion Sort Algorithm">
+            <span class="matrix-q-num">Q10</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+        <a href="#q-11" class="matrix-chip" title="Jump to Question 11: Insertion Sort Algorithm">
+            <span class="matrix-q-num">Q11</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-12" class="matrix-chip" title="Jump to Question 12: Insertion Sort Time Complexity (GFG)">
+            <span class="matrix-q-num">Q12</span>
+            <span class="matrix-q-ans ans-B">B</span>
+          </a>
+        <a href="#q-13" class="matrix-chip" title="Jump to Question 13: Insertion Sort Time Complexity (GFG)">
+            <span class="matrix-q-num">Q13</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+        <a href="#q-14" class="matrix-chip" title="Jump to Question 14: Insertion Sort Time Complexity (GFG)">
+            <span class="matrix-q-num">Q14</span>
+            <span class="matrix-q-ans ans-C">C</span>
+          </a>
+        <a href="#q-15" class="matrix-chip" title="Jump to Question 15: Insertion Sort Time Complexity (GFG)">
+            <span class="matrix-q-num">Q15</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-16" class="matrix-chip" title="Jump to Question 16: Recursion and Divide-and-Conquer">
+            <span class="matrix-q-num">Q16</span>
+            <span class="matrix-q-ans ans-B">B</span>
+          </a>
+        <a href="#q-17" class="matrix-chip" title="Jump to Question 17: Recursion and Divide-and-Conquer">
+            <span class="matrix-q-num">Q17</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+        <a href="#q-18" class="matrix-chip" title="Jump to Question 18: Recursion and Divide-and-Conquer">
+            <span class="matrix-q-num">Q18</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-19" class="matrix-chip" title="Jump to Question 19: Recursion and Divide-and-Conquer">
+            <span class="matrix-q-num">Q19</span>
+            <span class="matrix-q-ans ans-C">C</span>
+          </a>
+        <a href="#q-20" class="matrix-chip" title="Jump to Question 20: Merge Sort Algorithm">
+            <span class="matrix-q-num">Q20</span>
+            <span class="matrix-q-ans ans-B">B</span>
+          </a>
+        <a href="#q-21" class="matrix-chip" title="Jump to Question 21: Merge Sort Algorithm">
+            <span class="matrix-q-num">Q21</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+        <a href="#q-22" class="matrix-chip" title="Jump to Question 22: Merge Sort Algorithm">
+            <span class="matrix-q-num">Q22</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-23" class="matrix-chip" title="Jump to Question 23: Merge Sort Recursion Tree & Complexity">
+            <span class="matrix-q-num">Q23</span>
+            <span class="matrix-q-ans ans-C">C</span>
+          </a>
+        <a href="#q-24" class="matrix-chip" title="Jump to Question 24: Merge Sort Recursion Tree & Complexity">
+            <span class="matrix-q-num">Q24</span>
+            <span class="matrix-q-ans ans-B">B</span>
+          </a>
+        <a href="#q-25" class="matrix-chip" title="Jump to Question 25: Merge Sort Recursion Tree & Complexity">
+            <span class="matrix-q-num">Q25</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-26" class="matrix-chip" title="Jump to Question 26: Merge Sort Recursion Tree & Complexity">
+            <span class="matrix-q-num">Q26</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+        <a href="#q-27" class="matrix-chip" title="Jump to Question 27: Comparing and Choosing Sorting Algorithms">
+            <span class="matrix-q-num">Q27</span>
+            <span class="matrix-q-ans ans-C">C</span>
+          </a>
+        <a href="#q-28" class="matrix-chip" title="Jump to Question 28: Comparing and Choosing Sorting Algorithms">
+            <span class="matrix-q-num">Q28</span>
+            <span class="matrix-q-ans ans-B">B</span>
+          </a>
+        <a href="#q-29" class="matrix-chip" title="Jump to Question 29: Comparing and Choosing Sorting Algorithms">
+            <span class="matrix-q-num">Q29</span>
+            <span class="matrix-q-ans ans-D">D</span>
+          </a>
+        <a href="#q-30" class="matrix-chip" title="Jump to Question 30: Comparing and Choosing Sorting Algorithms">
+            <span class="matrix-q-num">Q30</span>
+            <span class="matrix-q-ans ans-A">A</span>
+          </a>
+      </div>
+    </section>
+
+    <!-- Filter & Search Toolbar -->
+    <div class="controls-bar">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search questions, options, or explanations..." oninput="filterQuestions()" />
+      <select id="topicFilter" class="topic-select" onchange="filterQuestions()">
+        <option value="ALL">All Topics (30 Questions)</option>
+        <option value="Selection Sort Algorithm">Selection Sort Algorithm</option>
+        <option value="Selection Sort Time Complexity">Selection Sort Time Complexity</option>
+        <option value="Insertion Sort Algorithm">Insertion Sort Algorithm</option>
+        <option value="Insertion Sort Time Complexity (GFG)">Insertion Sort Time Complexity (GFG)</option>
+        <option value="Recursion and Divide-and-Conquer">Recursion and Divide-and-Conquer</option>
+        <option value="Merge Sort Algorithm">Merge Sort Algorithm</option>
+        <option value="Merge Sort Recursion Tree & Complexity">Merge Sort Recursion Tree & Complexity</option>
+        <option value="Comparing and Choosing Sorting Algorithms">Comparing and Choosing Sorting Algorithms</option>
+      </select>
+      <span id="matchCounter" style="font-size: 13px; color: var(--text-muted); margin-left: auto;">Showing 30 of 30</span>
+    </div>
+
+    <!-- Questions Container -->
+    <main id="questionsContainer" class="questions-list">
+      
+        <article class="q-card" id="q-1" data-topic="Selection Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Selection Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#01.</span>
+            Which statement accurately describes the core operating mechanism of the Selection Sort algorithm on an unsorted array?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">It repeatedly scans the unsorted subarray to find the minimum element and swaps it to the front.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">It repeatedly compares and swaps adjacent out-of-order pairs until no inversions remain.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">It takes each element sequentially and shifts larger preceding elements right to insert it into place.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">It divides the array into two halves, recursively sorts them, and merges them together.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Selection Sort maintains two subarrays: a sorted prefix and an unsorted suffix. In each pass, it scans the unsorted portion to locate the smallest element and swaps it with the first unsorted position.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Classroom Mantra: 'Select the absolute minimum of what remains, and lock it into place with one swap!'</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-2" data-topic="Selection Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Selection Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: C</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#02.</span>
+            For an array with n elements, what is the exact number of outer loop passes required by Selection Sort to guarantee the entire array is completely sorted?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">n passes</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">n / 2 passes</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">n - 1 passes</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">log2(n) passes</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Selection Sort requires exactly (n - 1) outer loop passes. Once the first (n - 1) smallest elements are placed into their correct indices 0 through n - 2, the remaining single element at index n - 1 is mathematically guaranteed to be the maximum and already in its proper position.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>If you have 5 cards and place the 4 smallest in order, the 5th card is guaranteed to be in its correct final spot.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-3" data-topic="Selection Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Selection Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: B</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#03.</span>
+            Consider the array [4a, 4b, 2], where 4a and 4b have equal values. After the first pass of standard in-place Selection Sort, the array becomes [2, 4b, 4a]. What fundamental property does this demonstrate?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Selection Sort is adaptive because it detects identical values.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Selection Sort is UNSTABLE because a long-range swap can invert the relative order of duplicate keys.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Selection Sort achieves optimal O(n log n) comparisons on duplicate keys.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Selection Sort requires extra auxiliary memory proportional to the number of duplicates.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>In standard array-based Selection Sort, finding the minimum (2) at index 2 causes a swap with the element at index 0 (4a). This long-distance swap causes 4a to jump over 4b, reversing their original relative order from (4a, 4b) to (4b, 4a). Thus, standard Selection Sort is inherently unstable.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Classroom visual: Long-distance swaps jump right over duplicate twins, permanently destroying initial relative order.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-4" data-topic="Selection Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Selection Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#04.</span>
+            In the inner loop of Selection Sort during pass i (where 0 <= i < n - 1), how many element comparisons are executed?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Exactly i comparisons</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Exactly n comparisons</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">floor(n / 2) comparisons</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Exactly n - 1 - i comparisons</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>In pass i, the inner loop index j runs from i + 1 up to n - 1. The total number of iterations is (n - 1) - (i + 1) + 1 = n - 1 - i. For example, at pass 0 it performs n - 1 comparisons; at pass n - 2 it performs exactly 1 comparison.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>At pass i, the scan window only looks at elements to the right of index i, shrinking by 1 comparison each pass.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-5" data-topic="Selection Sort Time Complexity">
+          <div class="q-meta">
+            <span class="q-topic-tag">Selection Sort Time Complexity</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#05.</span>
+            Why does Selection Sort exhibit a Best-Case time complexity of Θ(n²) even when the input array is already completely sorted?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">It lacks an early-exit check and must scan every remaining unsorted element to confirm the minimum.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">It performs n(n - 1) / 2 element swaps regardless of initial order.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Its recursion stack always expands to depth n.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">It allocates O(n²) temporary memory buffers before processing begins.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Selection Sort has zero early-termination conditions. Even if the array is already in perfect ascending order, the inner loop must still inspect every remaining element before confirming that arr[i] is indeed the minimum of that pass. Thus, it always makes n(n - 1)/2 comparisons, yielding Θ(n²).</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Selection Sort is completely 'order-blind'—it does the exact same work whether the list is already sorted, reversed, or random.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-6" data-topic="Selection Sort Time Complexity">
+          <div class="q-meta">
+            <span class="q-topic-tag">Selection Sort Time Complexity</span>
+            <span class="q-key-badge">Correct Key: C</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#06.</span>
+            What is the exact formula for the total number of element comparisons performed by Selection Sort on an array of size n?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">n - 1 comparisons</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">n² comparisons</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">n(n - 1) / 2 comparisons</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">n log2(n) comparisons</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>The total number of comparisons is the sum of the arithmetic series (n - 1) + (n - 2) + ... + 2 + 1. By Gauss's summation formula, this equals n(n - 1) / 2 comparisons, regardless of input distribution.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Show the arithmetic series on the board: summing from (n - 1) down to 1 always yields exactly n(n - 1)/2.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-7" data-topic="Selection Sort Time Complexity">
+          <div class="q-meta">
+            <span class="q-topic-tag">Selection Sort Time Complexity</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#07.</span>
+            In embedded microcontrollers where writing to non-volatile EEPROM or Flash memory degrades the hardware, why is Selection Sort preferred over Insertion Sort?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Selection Sort has a faster asymptotic time complexity of O(n log n).</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Selection Sort requires fewer comparisons than any other comparison sort.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Selection Sort uses zero CPU registers during execution.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Selection Sort performs at most n - 1 swaps (O(n) writes), minimizing physical wear on memory cells.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>While Insertion Sort can perform up to O(n²) memory shifts/writes, Selection Sort executes at most one swap per outer pass, totaling at most n - 1 swaps (O(n) memory writes). In hardware where flash write cycles degrade physical storage, minimizing writes is crucial.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Crucial real-world trade-off: when memory writes physically wear out hardware, O(n) swaps beats O(n²) shifts every time!</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-8" data-topic="Insertion Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: B</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#08.</span>
+            What is the intuitive mechanical analogy most commonly used to explain how Insertion Sort operates?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Dividing a deck of cards into two halves on a table and interleaving them.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Sorting playing cards in your hand by sliding drawn cards into their correct ordered position.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Looking up names in a telephone book using binary search.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Pouring water through successive graduated filter cylinders.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Insertion Sort mirrors how people arrange playing cards in their hands. As each new card (the 'key') is picked up, larger cards already held in the sorted hand are slid one slot to the right, and the key is inserted into its proper place.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Think of your left hand holding sorted cards, and your right hand drawing one new card at a time to insert.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-9" data-topic="Insertion Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: C</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#09.</span>
+            Why does the outer loop of Insertion Sort typically start at array index 1 instead of index 0?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Index 0 is reserved for storing the length of the array in C-style arrays.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">The algorithm skips index 0 to avoid checking negative index bounds.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">A subarray consisting of a single element (arr[0]) is trivially already sorted.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Index 0 always contains the global maximum element.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>A subarray of length 1 (namely arr[0..0]) satisfies the sortedness invariant trivially by definition. Therefore, the first meaningful insertion occurs when inserting the second element (arr[1]) into the 1-element sorted prefix.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>A single card in your hand is already sorted; the sorting work starts when you draw card #2.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-10" data-topic="Insertion Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#10.</span>
+            How does Insertion Sort move elements to make room for the current key element?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">It shifts larger elements in the sorted portion one position to the right via consecutive assignments.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">It performs long-distance swaps between the key and the minimum element.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">It allocates a new dynamic linked list node for each preceding element.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">It rotates the entire array cyclically using a queue buffer.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>While scanning backward through the sorted prefix (while j >= 0 and arr[j] > key), Insertion Sort copies arr[j] into arr[j + 1]. This rightward shift creates a vacant slot where the key is eventually deposited.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Remember: Insertion Sort SHIFTS rather than SWAPS. One shift is a single assignment, saving CPU instructions.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-11" data-topic="Insertion Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#11.</span>
+            Why does standard Insertion Sort preserve the relative order of duplicate elements (making it a STABLE sort)?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Because it uses a secondary hash table to track duplicate indices.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Because it always swaps elements across even index intervals.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Because the outer loop runs in reverse from n - 1 down to 0.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Because the backward scan condition arr[j] > key stops when encountering an equal key, placing the key immediately after its duplicate.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>The shift condition arr[j] > key is strictly greater-than. When the key encounters an identical value in the sorted prefix, the condition evaluates to false, shifting halts, and the key is placed directly behind the duplicate, preserving original relative order.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Strict inequality (>) is the guardian of stability in Insertion Sort! Changing it to >= would make it unstable.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-12" data-topic="Insertion Sort Time Complexity (GFG)">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Time Complexity (GFG)</span>
+            <span class="q-key-badge">Correct Key: B</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#12.</span>
+            According to GeeksforGeeks analysis, what are the exact performance characteristics of Insertion Sort in the BEST CASE (e.g., input [1, 2, 3, 4, 5])?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">O(n²) time with n(n - 1) / 2 comparisons and n shifts.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">O(n) linear time with exactly n - 1 comparisons and 0 shifts.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">O(n log n) time with log2(n) comparisons and n - 1 shifts.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">O(1) constant time because no loops execute.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Per GeeksforGeeks: Best case occurs when the array is already sorted (e.g. [1, 2, 3, 4, 5]). Each element arr[i] is compared only once with arr[i - 1]. Because arr[i - 1] <= key, the inner while loop terminates immediately without shifting, requiring exactly n - 1 comparisons and 0 shifts, achieving O(n) time.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>GFG benchmark: Best case is already sorted! Exactly n - 1 checks, 0 data movements, linear O(n) speed.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-13" data-topic="Insertion Sort Time Complexity (GFG)">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Time Complexity (GFG)</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#13.</span>
+            In the AVERAGE CASE analysis grounded in GeeksforGeeks literature, why does Insertion Sort perform approximately n² / 4 shifts?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">On average, each key element is smaller than roughly half of the elements in the sorted subarray before finding its slot.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Every key element always shifts past all preceding elements.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">The algorithm skips every second element during the backward scan.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Only the left half of the array requires sorting.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Per GeeksforGeeks: In a random permutation, a new key element will on average be smaller than about half of the elements currently in the sorted prefix of length i. The expected number of shifts is sum(i/2) = (1/2) * [n(n - 1)/2] ≈ n² / 4, which is Θ(n²).</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Probability intuition: on average you walk halfway into your hand of cards before finding the right home for your new card.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-14" data-topic="Insertion Sort Time Complexity (GFG)">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Time Complexity (GFG)</span>
+            <span class="q-key-badge">Correct Key: C</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#14.</span>
+            Under what input arrangement does the WORST CASE of Insertion Sort occur, and what is the total number of comparisons and shifts required?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">When all elements are zero; n - 1 comparisons.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">When elements alternate between odd and even numbers; n log2(n) operations.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">When the input is sorted in strict reverse order (e.g., [5, 4, 3, 2, 1]); requiring n(n - 1) / 2 comparisons and shifts.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">When the largest element is placed at index 1; requiring 2n operations.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Per GeeksforGeeks: Worst case occurs when the array is in reverse order (e.g. [5, 4, 3, 2, 1]). Every new key arr[i] is smaller than all i elements in the sorted prefix. It must be compared and shifted past all of them to reach index 0. The total operations sum to 1 + 2 + ... + (n - 1) = n(n - 1) / 2, giving O(n²).</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>GFG reverse example: [5, 4, 3, 2, 1] causes every element to shift all the way to index 0, summing to n(n-1)/2.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-15" data-topic="Insertion Sort Time Complexity (GFG)">
+          <div class="q-meta">
+            <span class="q-topic-tag">Insertion Sort Time Complexity (GFG)</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#15.</span>
+            What is the auxiliary space complexity of Insertion Sort as documented by GeeksforGeeks, and what memory is utilized during execution?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">O(n) auxiliary space to allocate a duplicate array.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">O(n²) space for the shift transposition table.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">O(log n) space for the recursive call stack.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">O(1) constant auxiliary space because it sorts in place using only scalar variables like key and j.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Per GeeksforGeeks: Insertion Sort sorts the array in place, so it does not require an extra array. It uses only a few temporary variables, such as 'key' and 'j'. The amount of extra memory remains constant: O(1) Auxiliary Space.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>GFG space note: Only 'key' and index 'j' take memory—constant auxiliary space O(1) regardless of array size.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-16" data-topic="Recursion and Divide-and-Conquer">
+          <div class="q-meta">
+            <span class="q-topic-tag">Recursion and Divide-and-Conquer</span>
+            <span class="q-key-badge">Correct Key: B</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#16.</span>
+            Which sequence correctly lists the three foundational phases of the Divide-and-Conquer algorithmic design paradigm?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Partition, Iterate, Finalize</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Divide (break into subproblems), Conquer (solve recursively), Combine (merge solutions)</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Select (find extreme), Swap (exchange), Verify (validate order)</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Transform, Conquer, Invert</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>The Divide-and-Conquer paradigm consists of: 1) Divide the original problem into smaller subproblems that are smaller instances of the same problem; 2) Conquer the subproblems by solving them recursively (or directly at base cases); 3) Combine the solutions to form the overall answer.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>The three D&C pillars: Divide into halves, Conquer down to base cases, Combine back together.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-17" data-topic="Recursion and Divide-and-Conquer">
+          <div class="q-meta">
+            <span class="q-topic-tag">Recursion and Divide-and-Conquer</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#17.</span>
+            What is the vital role of the 'base case' in any recursive divide-and-conquer implementation?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">It establishes a terminating condition for trivial subproblem sizes to halt recursion and prevent call stack overflow.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">It sorts the entire array iteratively before recursive calls begin.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">It doubles the available memory on the runtime heap.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">It balances an unbalanced binary search tree.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Every recursive call allocates a new stack frame on the call stack. The base case provides an exit condition for inputs small enough to be solved trivially (e.g., n <= 1). Without it, recursion continues indefinitely until call stack memory is exhausted.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Classroom analogy: A basecase is the brake pedal of recursion. Without brakes, you crash through the memory wall!</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-18" data-topic="Recursion and Divide-and-Conquer">
+          <div class="q-meta">
+            <span class="q-topic-tag">Recursion and Divide-and-Conquer</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#18.</span>
+            In algorithm analysis, how do we express the running time of a Divide-and-Conquer algorithm mathematically?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Using a quadratic matrix equation.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Using a truth table with boolean operators.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Using an arithmetic geometric progression series.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Using a recurrence relation (e.g., T(n) = a·T(n/b) + f(n)), where f(n) is the divide and combine cost.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>A recurrence relation describes the running time T(n) of a recursive function in terms of T(k) for smaller input sizes k, plus the overhead cost f(n) of dividing the problem and combining the sub-solutions.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>T(n) represents total time, a·T(n/b) represents recursive work on subproblems, and f(n) is the split/combine cost.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-19" data-topic="Recursion and Divide-and-Conquer">
+          <div class="q-meta">
+            <span class="q-topic-tag">Recursion and Divide-and-Conquer</span>
+            <span class="q-key-badge">Correct Key: C</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#19.</span>
+            What is the key distinguishing factor between problems suited for Divide-and-Conquer versus those requiring Dynamic Programming?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Divide-and-Conquer only applies to graphs, while Dynamic Programming only applies to strings.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Dynamic Programming never uses recursion, whereas Divide-and-Conquer cannot be written iteratively.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Divide-and-Conquer is best when subproblems are disjoint and independent; Dynamic Programming is required when subproblems overlap heavily.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Divide-and-Conquer always runs in O(n²) time, whereas Dynamic Programming runs in O(1) time.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Divide-and-Conquer partitions problems into disjoint, non-overlapping pieces (e.g. left and right halves of an array). When subproblems overlap and are recomputed repeatedly, Dynamic Programming avoids redundant work via memoization or tabulation.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Divide & Conquer = disjoint subproblems (no reuse needed). Dynamic Programming = overlapping subproblems (memoize!).</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-20" data-topic="Merge Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Merge Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: B</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#20.</span>
+            In Merge Sort, during which specific operational phase does all actual element comparison and sorting take place?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">During the recursive midpoint division step (mid = (left + right) / 2).</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">During the Combine (Merge) step when comparing elements from two sorted subarrays into the main array.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">During the base case check (if left >= right).</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">During initial memory pre-allocation.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Dividing an array in half does zero sorting—it merely partitions index ranges down to trivial 1-element subarrays. All comparisons and sorting decisions occur exclusively within the merge() procedure as it interleaves the two sorted halves.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Emphasize this in class: 'The split does no sorting! All the magic and comparisons happen in the MERGE function.'</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-21" data-topic="Merge Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Merge Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#21.</span>
+            What is the time complexity of merging two sorted subarrays having a combined length of n elements using the standard two-pointer merge algorithm?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">O(n) linear time</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">O(log n) logarithmic time</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">O(n²) quadratic time</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">O(1) constant time</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>The two-pointer merge algorithm advances one of two pointers on each step, comparing L[i] and R[j] and copying the smaller element to the destination array. Each of the n elements is inspected and written at most once, requiring linear O(n) time.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Two pointers move forward without ever backtracking. Each step places one item, taking linear O(n) time.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-22" data-topic="Merge Sort Algorithm">
+          <div class="q-meta">
+            <span class="q-topic-tag">Merge Sort Algorithm</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#22.</span>
+            In the standard two-pointer merge() routine, which comparison operator ensures that identical elements maintain their relative original order, guaranteeing STABILITY?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">L[i] < R[j] (strictly less-than)</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">L[i] != R[j] (not-equal)</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">L[i] > R[j] (strictly greater-than)</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">L[i] <= R[j] (less-than-or-equal, prioritizing the left subarray on ties)</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>When comparing L[i] and R[j], writing 'if (L[i] <= R[j])' ensures that if equal elements appear in both subarrays, the one from the left subarray L is copied first. Because elements in L originally preceded elements in R, their relative order is preserved.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Remember the condition: 'if L[i] <= R[j], pick L[i]'. The '<=' guarantees stability by favoring the left side on ties!</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-23" data-topic="Merge Sort Recursion Tree & Complexity">
+          <div class="q-meta">
+            <span class="q-topic-tag">Merge Sort Recursion Tree & Complexity</span>
+            <span class="q-key-badge">Correct Key: C</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#23.</span>
+            For an input array of size n, what is the total height (number of levels) of the Merge Sort recursion tree?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">n levels</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">n / 2 levels</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">log2(n) + 1 levels (which is Θ(log n))</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">n² levels</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>At each level of recursion, the problem size is halved: n, n/2, n/4, ..., down to 1. The number of times you can divide n by 2 until reaching 1 is log2(n). Including the root level, the total tree height is log2(n) + 1, which is O(log n).</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Every time you cut something in half repeatedly until size 1, the number of cuts is logarithmic: log2(n).</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-24" data-topic="Merge Sort Recursion Tree & Complexity">
+          <div class="q-meta">
+            <span class="q-topic-tag">Merge Sort Recursion Tree & Complexity</span>
+            <span class="q-key-badge">Correct Key: B</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#24.</span>
+            In the Merge Sort recursion tree, how much total merging work is performed across all nodes at ANY single level k?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">O(1) work</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Exactly c · n work (linear O(n) across all subproblems at that level)</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">O(n²) work</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">O(log n) work</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>At level k, there are 2^k subproblems, each of size n / 2^k. The merging cost per subproblem is c · (n / 2^k). Multiplying them gives 2^k · c · (n / 2^k) = c · n work. Every single level contributes exactly O(n) total work!</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Crucial classroom concept: 'Every level of the recursion tree sums up to exactly n elements, so every level costs O(n).'</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-25" data-topic="Merge Sort Recursion Tree & Complexity">
+          <div class="q-meta">
+            <span class="q-topic-tag">Merge Sort Recursion Tree & Complexity</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#25.</span>
+            Applying the Master Theorem to the Merge Sort recurrence T(n) = 2T(n/2) + Θ(n), which case applies and what is the resulting asymptotic bound?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Case 1: T(n) = Θ(n)</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Case 3: T(n) = Θ(n²)</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Case 1: T(n) = Θ(log n)</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Case 2 (f(n) = Θ(n^(log_b a)) where log2(2) = 1): T(n) = Θ(n log n)</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Here a = 2, b = 2, and f(n) = Θ(n). Since log_b(a) = log_2(2) = 1, we have n^(log_b a) = n^1 = n. Because f(n) = Θ(n^1), Case 2 of the Master Theorem applies, yielding T(n) = Θ(n^(log_b a) · log n) = Θ(n log n) across all cases.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Master Theorem Case 2: when work per level stays constant across all tree levels, total work is level cost × tree height = O(n log n).</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-26" data-topic="Merge Sort Recursion Tree & Complexity">
+          <div class="q-meta">
+            <span class="q-topic-tag">Merge Sort Recursion Tree & Complexity</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#26.</span>
+            What is the primary architectural drawback of standard Merge Sort when compared to elementary algorithms like Insertion Sort or Selection Sort?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">It requires O(n) auxiliary memory space to store temporary arrays during the merge step.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Its worst-case time complexity degrades to O(n²) on reversed arrays.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">It cannot be used to sort floating-point numbers or strings.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">It destroys the stability of original equal keys.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Unlike Selection Sort and Insertion Sort which are in-place O(1) auxiliary space algorithms, standard Merge Sort requires O(n) auxiliary buffer space to hold elements while merging the two halves back together.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Trade-off to discuss in class: Merge Sort gives you speed (n log n) at the cost of RAM (O(n) auxiliary space).</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-27" data-topic="Comparing and Choosing Sorting Algorithms">
+          <div class="q-meta">
+            <span class="q-topic-tag">Comparing and Choosing Sorting Algorithms</span>
+            <span class="q-key-badge">Correct Key: C</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#27.</span>
+            Under which operational condition is INSERTION SORT practically and theoretically superior to Merge Sort?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">When sorting 10,000,000 completely randomized integers.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">When auxiliary memory is unbounded and we require strict O(n log n) worst-case runtime.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">When the input array is small (n < 50) or already nearly sorted, due to low constant overhead and O(n) adaptive behavior.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">When sorting external database tables stored on tape drives.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Insertion Sort has very low constant factor overhead and requires zero extra memory. On small lists (n < 50) or nearly-sorted lists, its adaptive nature runs in O(n) time, easily outperforming Merge Sort's recursion and memory allocation overhead.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Practical rule: When data is nearly sorted or very small, Insertion Sort is faster in real-world benchmarks!</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-28" data-topic="Comparing and Choosing Sorting Algorithms">
+          <div class="q-meta">
+            <span class="q-topic-tag">Comparing and Choosing Sorting Algorithms</span>
+            <span class="q-key-badge">Correct Key: B</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#28.</span>
+            Which table row accurately summarizes the worst-case time, auxiliary space, and stability characteristics of Selection Sort, Insertion Sort, and Merge Sort?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Selection: O(n log n), O(1), Stable | Insertion: O(n²), O(n), Unstable | Merge: O(n), O(1), Stable</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Selection: O(n²), O(1), Unstable | Insertion: O(n²), O(1), Stable | Merge: O(n log n), O(n), Stable</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Selection: O(n²), O(n), Stable | Insertion: O(n), O(1), Unstable | Merge: O(n²), O(n), Unstable</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Selection: O(n log n), O(n), Unstable | Insertion: O(n²), O(1), Stable | Merge: O(n log n), O(1), Unstable</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Selection Sort is O(n²) in all cases, O(1) auxiliary space, and inherently unstable. Insertion Sort is O(n²) worst/average, O(n) best, O(1) space, and stable. Merge Sort is O(n log n) in all cases, O(n) space, and stable.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Memorize this matrix row: Selection = Unstable O(1); Insertion = Stable O(1) Adaptive; Merge = Stable O(n) Fast.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-29" data-topic="Comparing and Choosing Sorting Algorithms">
+          <div class="q-meta">
+            <span class="q-topic-tag">Comparing and Choosing Sorting Algorithms</span>
+            <span class="q-key-badge">Correct Key: D</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#29.</span>
+            Why is Merge Sort particularly well-suited for sorting singly linked lists compared to arrays?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item ">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">Linked lists eliminate the need to find the midpoint of the list.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">Linked lists allow Selection Sort to achieve O(n log n) time.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">Linked lists make Insertion Sort run in O(1) worst-case time.</span>
+                
+              </div>
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">Merging linked lists only requires updating node pointers, achieving O(1) auxiliary space without allocating extra arrays.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>In an array, merging requires allocating an auxiliary buffer of size n to avoid overwriting data. In a linked list, elements can be spliced and merged simply by rewiring 'next' pointers in place, dropping the auxiliary space overhead to O(1) (excluding recursive stack frames).</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Linked lists + Merge Sort = match made in heaven! Fast O(n log n) without the O(n) array memory penalty.</p>
+          </div>
+        </article>
+
+        <article class="q-card" id="q-30" data-topic="Comparing and Choosing Sorting Algorithms">
+          <div class="q-meta">
+            <span class="q-topic-tag">Comparing and Choosing Sorting Algorithms</span>
+            <span class="q-key-badge">Correct Key: A</span>
+          </div>
+
+          <h3 class="q-title">
+            <span style="color: #4ea3a1; font-family: ui-monospace, monospace; margin-right: 6px;">#30.</span>
+            How do modern production sorting engines (such as Python's sorted() and Java's Arrays.sort()) combine Insertion Sort and Merge Sort in TIMSORT?
+          </h3>
+
+          <div class="q-options-grid">
+            
+              <div class="option-item correct-answer">
+                <span class="option-letter-badge">A</span>
+                <span style="flex:1;">They identify natural ordered 'runs' and use Insertion Sort on small chunks (n <= 32 or 64), then combine the sorted runs using an optimized Merge Sort.</span>
+                <span class="correct-tag">✓ Correct Answer</span>
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">B</span>
+                <span style="flex:1;">They run Selection Sort first, and switch to Merge Sort only if an error occurs.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">C</span>
+                <span style="flex:1;">They use Insertion Sort for odd numbers and Merge Sort for even numbers.</span>
+                
+              </div>
+              <div class="option-item ">
+                <span class="option-letter-badge">D</span>
+                <span style="flex:1;">They execute Merge Sort until the tree reaches depth 2, then discard the recursion.</span>
+                
+              </div>
+          </div>
+
+          <div class="explanation-box">
+            <div class="box-label">Step-by-Step Rationale &amp; Proof:</div>
+            <p>Real-world sorting algorithms like Timsort (used in Python and Java) are hybrid algorithms. They detect pre-existing sorted 'runs', sort small subarrays using Insertion Sort (which is blazingly fast for small sizes), and combine them using Merge Sort.</p>
+          </div>
+
+          <div class="talking-point-box">
+            <div class="box-label">💡 Classroom Talking Point:</div>
+            <p>Capstone lesson: Why learn both? Because the world's most popular sorting engine, Timsort, combines Merge Sort + Insertion Sort!</p>
+          </div>
+        </article>
+    </main>
+
+    <footer style="margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--card-border); text-align: center; color: var(--text-muted); font-size: 13px;">
+      <p>CS 05: Core Algorithms &amp; Complexity — Chapter 5: Sorting and Divide-and-Conquer</p>
+      <p style="margin-top: 6px;">Designed for classroom presentation, peer review, and conceptual mastery.</p>
+    </footer>
+  </div>
+
+  <script>
+    function filterQuestions() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+      const topic = document.getElementById("topicFilter").value;
+      const cards = document.querySelectorAll(".q-card");
+      let visible = 0;
+
+      cards.forEach(card => {
+        const cardTopic = card.getAttribute("data-topic");
+        const cardText = card.textContent.toLowerCase();
+
+        const matchTopic = (topic === "ALL" || cardTopic === topic);
+        const matchQuery = (!query || cardText.includes(query));
+
+        if (matchTopic && matchQuery) {
+          card.style.display = "block";
+          visible++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      document.getElementById("matchCounter").textContent = `Showing ${visible} of ${cards.length}`;
+    }
+
+    // Render KaTeX math on load
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\(", right: "\)", display: false },
+            { left: "\[", right: "\]", display: true }
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#111816" />
+  <meta name="description" content="CS 05 Chapter 5 classroom presentation deck and 30-item interactive timed quiz on Sorting and Divide-and-Conquer algorithms." />
+  <title>CS 05 Chapter 5 — Sorting and Divide-and-Conquer</title>
+  
+  <link rel="stylesheet" href="styles.css" />
+  <!-- KaTeX for beautiful in-browser mathematical notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Accessibility skip link -->
+  <a href="#mainDeck" class="skip-link">Skip to main presentation</a>
+
+  <div class="viewport">
+    <!-- Fixed 16:9 Deck Shell (dynamically scaled by app.js) -->
+    <main id="deckShell" class="deck-shell">
+      <!-- Top Progress Track -->
+      <div class="progress-track" aria-hidden="true">
+        <span id="progressFill"></span>
+      </div>
+
+      <!-- Slide Container -->
+      <div id="mainDeck" class="slide-container" role="region" aria-label="Classroom Slides">
+        
+        <!-- ================================================================
+             SLIDE 1: Title & Course Opening
+             ================================================================ -->
+        <section class="slide slide-opening active" data-title="Chapter 5: Overview & Agenda" 
+          data-notes="Welcome the class! Today we conquer Chapter 5: Sorting and Divide-and-Conquer. Emphasize that sorting is not just about putting numbers in order—it is the foundational problem that taught computer science how to measure efficiency, discover algorithmic paradigms, and compare real-world trade-offs. Tell them: By the end of this lecture, you will master Selection Sort, Insertion Sort, Divide-and-Conquer, and Merge Sort, and be ready for the 30-question classroom quiz!">
+          <div class="opening-layout">
+            <div class="opening-intro">
+              <p class="kicker">CS 05 • Core Computer Science</p>
+              <h1>Chapter 5: <em>Sorting &amp; Divide-and-Conquer</em></h1>
+              <p class="opening-lead">
+                A classroom guide to elementary sorting, recurrence analysis, and divide-and-conquer efficiency. Designed for teaching, presenting, and conceptual mastery.
+              </p>
+              <div class="quick-stats-row">
+                <div class="stat-box">
+                  <strong>8</strong>
+                  <span>Core Topics</span>
+                </div>
+                <div class="stat-box">
+                  <strong>30</strong>
+                  <span>Timed Quiz Items</span>
+                </div>
+                <div class="stat-box">
+                  <strong>1 min</strong>
+                  <span>Timer / Question</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chapter-thread" aria-label="Chapter Topics">
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=1; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>01</span>
+                <p>Selection Sort Algorithm</p>
+              </div>
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=2; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>02</span>
+                <p>Selection Sort Time Complexity</p>
+              </div>
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=3; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>03</span>
+                <p>Insertion Sort Algorithm</p>
+              </div>
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=4; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>04</span>
+                <p>Insertion Sort Time Complexity (GFG)</p>
+              </div>
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=5; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>05</span>
+                <p>Recursion &amp; Divide-and-Conquer</p>
+              </div>
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=6; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>06</span>
+                <p>Merge Sort Algorithm</p>
+              </div>
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=7; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>07</span>
+                <p>Merge Sort Recursion Tree &amp; Complexity</p>
+              </div>
+              <div class="thread-item" onclick="document.getElementById('slideSelect').value=8; document.getElementById('slideSelect').dispatchEvent(new Event('change'))">
+                <span>08</span>
+                <p>Comparing &amp; Choosing Sorting Algorithms</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 2: TOPIC 1 — Selection Sort Algorithm
+             ================================================================ -->
+        <section class="slide" data-title="Topic 1: Selection Sort Algorithm"
+          data-notes="<strong>Classroom Talking Points for Topic 1:</strong><br>• <em>Analogy:</em> Finding the shortest kid in gym class. You scan everyone from left to right, find the shortest one, and swap them with the first person in line. Then you scan the rest, find the second shortest, and put them in spot 2.<br>• <em>Key Mechanism:</em> It partitions the list into a SORTED prefix and an UNSORTED suffix.<br>• <em>Trap to highlight:</em> It is inherently UNSTABLE in standard arrays because long swaps jump over identical values!">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 01 • Elementary Sorting</p>
+              <h2>Selection Sort: The 'Find Minimum and Swap' Mechanism</h2>
+            </div>
+            <span class="section-chip">Part 1 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="split-layout">
+              <!-- Left Column: Definition & Keywords -->
+              <div class="panel">
+                <div class="definition-card">
+                  <strong>Definition to Explain in Class:</strong>
+                  <p>
+                    Selection Sort is an in-place comparison algorithm that repeatedly searches the <strong>unsorted portion</strong> of an array to find the <strong>minimum element</strong>, then swaps it with the first element of that unsorted portion.
+                  </p>
+                </div>
+
+                <div>
+                  <strong style="font-size: 13px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em;">Essential Keywords:</strong>
+                  <div class="keywords-tag-container">
+                    <span class="keyword-tag">Minimum Element</span>
+                    <span class="keyword-tag">Sorted Subarray arr[0..i-1]</span>
+                    <span class="keyword-tag">Unsorted Subarray arr[i..n-1]</span>
+                    <span class="keyword-tag amber">In-Place Swap</span>
+                    <span class="keyword-tag amber">n - 1 Passes</span>
+                    <span class="keyword-tag green">Unstable by Default</span>
+                  </div>
+                </div>
+
+                <div class="talking-point-banner">
+                  <span class="label">Talking Point</span>
+                  <p>"Remember: Selection Sort makes a commitment in every pass—find the absolute minimum of what remains, and lock it into place with one swap!"</p>
+                </div>
+
+                <div class="callout amber">
+                  <strong>Why is it Unstable?</strong>
+                  <p>A long-distance swap can jump an element over its twin! For instance, in <code>[4a, 4b, 2]</code>, swapping 2 with 4a gives <code>[2, 4b, 4a]</code>. The relative order of 4a and 4b was inverted.</p>
+                </div>
+              </div>
+
+              <!-- Right Column: Interactive Visualizer & Code -->
+              <div class="panel">
+                <div class="visualizer-container">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="font-size: 14px; text-transform: uppercase; color: var(--actual);">Live Step Simulator</strong>
+                    <div style="font-size: 11px; display:flex; gap: 8px;">
+                      <span style="color:var(--result)">■ Sorted</span>
+                      <span style="color:var(--focus)">■ Comparing</span>
+                      <span style="color:var(--danger)">■ Min</span>
+                    </div>
+                  </div>
+                  <div id="selectionVisualizerBars" class="visualizer-bars"></div>
+                  <div class="visualizer-controls">
+                    <span id="selStatusText" class="visualizer-status">Click 'Next Step' to begin.</span>
+                    <div style="display: flex; gap: 6px;">
+                      <button id="selStepBtn" class="visualizer-btn primary">Next Step ›</button>
+                      <button id="selResetBtn" class="visualizer-btn">Reset</button>
+                    </div>
+                  </div>
+                </div>
+
+                <pre class="code-block"><code><span class="keyword">function</span> <span class="fn">selectionSort</span>(arr, n):
+  <span class="keyword">for</span> i = 0 <span class="keyword">to</span> n - 2:           <span class="comment">// n - 1 total passes</span>
+    min_idx = i
+    <span class="keyword">for</span> j = i + 1 <span class="keyword">to</span> n - 1:     <span class="comment">// Scan unsorted part</span>
+      <span class="keyword">if</span> arr[j] &lt; arr[min_idx]:
+        min_idx = j
+    swap(arr[i], arr[min_idx])  <span class="comment">// Exactly 1 swap per pass</span></code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 3: TOPIC 2 — Selection Sort Time Complexity
+             ================================================================ -->
+        <section class="slide" data-title="Topic 2: Selection Sort Complexity"
+          data-notes="<strong>Classroom Talking Points for Topic 2:</strong><br>• <em>The Big Question:</em> 'What if the array is already sorted? Does Selection Sort run faster?'<br>• <em>The Answer:</em> NO! It is 'blind' to sortedness. Even if given [1, 2, 3, 4, 5], it STILL scans every single remaining number in every pass to verify no smaller number exists.<br>• <em>Comparisons formula:</em> (n-1) + (n-2) + ... + 1 = n(n-1)/2. Dominant term is n², so O(n²) in ALL cases!<br>• <em>The Silver Lining:</em> Maximum n - 1 swaps = O(n) swaps. Excellent for flash memory with write-cycle limits!">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 02 • Complexity Analysis</p>
+              <h2>Selection Sort: Exact Mathematical Analysis &amp; Invariance</h2>
+            </div>
+            <span class="section-chip">Part 2 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="split-layout">
+              <!-- Left: Mathematical Derivation -->
+              <div class="panel">
+                <div class="definition-card amber">
+                  <strong>Total Comparisons Formula (Arithmetic Series)</strong>
+                  <p>In pass 0, it makes (n - 1) comparisons. In pass 1, (n - 2). In pass n - 2, 1 comparison:</p>
+                </div>
+
+                <div class="formula amber">
+                  C(n) = (n - 1) + (n - 2) + ... + 2 + 1 = n(n - 1) / 2 = O(n²)
+                </div>
+
+                <div class="callout danger">
+                  <strong>Why Best Case is STILL O(n²):</strong>
+                  <p>Selection Sort has <strong>zero early exit conditions</strong>. Even if the array is already perfectly sorted, the inner loop must inspect every remaining element before confirming that <code>arr[i]</code> is indeed the minimum.</p>
+                </div>
+
+                <div class="talking-point-banner">
+                  <span class="label">Board Note</span>
+                  <p>"Selection Sort is completely indifferent to the initial state of the array. Best, Average, and Worst case comparisons are identical: exactly n(n - 1)/2."</p>
+                </div>
+              </div>
+
+              <!-- Right: Complexity Summary Table & Swaps Advantage -->
+              <div class="panel">
+                <table class="editorial-table">
+                  <thead>
+                    <tr>
+                      <th>Scenario</th>
+                      <th>Comparisons</th>
+                      <th>Swaps</th>
+                      <th>Time</th>
+                      <th>Space</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Best Case</strong> (Already sorted)</td>
+                      <td><code>n(n - 1) / 2</code></td>
+                      <td><code>0</code></td>
+                      <td><code>O(n²)</code></td>
+                      <td><code>O(1)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Average Case</strong> (Random)</td>
+                      <td><code>n(n - 1) / 2</code></td>
+                      <td><code>O(n)</code></td>
+                      <td><code>O(n²)</code></td>
+                      <td><code>O(1)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Worst Case</strong> (Reverse sorted)</td>
+                      <td><code>n(n - 1) / 2</code></td>
+                      <td><code>n - 1</code></td>
+                      <td><code>O(n²)</code></td>
+                      <td><code>O(1)</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="definition-card green" style="margin-top: 10px;">
+                  <strong>The One Big Advantage: O(n) Swaps!</strong>
+                  <p>
+                    While Insertion Sort can perform up to O(n²) data movements, Selection Sort executes at most <strong>n - 1 swaps</strong>. In hardware systems where memory write operations degrade the storage medium (such as EEPROM or flash), Selection Sort minimizes memory writes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 4: TOPIC 3 — Insertion Sort Algorithm
+             ================================================================ -->
+        <section class="slide" data-title="Topic 3: Insertion Sort Algorithm"
+          data-notes="<strong>Classroom Talking Points for Topic 3:</strong><br>• <em>The Card Player Analogy:</em> How do you sort cards in your hand? You hold sorted cards on the left. When dealt a new card (the 'KEY'), you compare it backward, shift bigger cards to the right, and drop the key in its spot!<br>• <em>Start at index 1:</em> An array of 1 element (arr[0]) is already sorted! You start from the second element.<br>• <em>Adaptive & Online:</em> It can process data live as it arrives from a stream. And if data is already sorted, it takes only O(n) time!">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 03 • Elementary Sorting</p>
+              <h2>Insertion Sort: The 'Card In Hand' Shifting Mechanism</h2>
+            </div>
+            <span class="section-chip">Part 3 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="split-layout">
+              <!-- Left: Concept, Analogy, & Keywords -->
+              <div class="panel">
+                <div class="definition-card">
+                  <strong>Definition to Explain in Class:</strong>
+                  <p>
+                    Insertion Sort builds the final sorted array <strong>one element at a time</strong>. It picks the next element (the <strong>key</strong>) from the unsorted portion and slides larger elements in the sorted portion one slot to the right, inserting the key in its rightful position.
+                  </p>
+                </div>
+
+                <div>
+                  <strong style="font-size: 13px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em;">Essential Keywords:</strong>
+                  <div class="keywords-tag-container">
+                    <span class="keyword-tag">Card Player Analogy</span>
+                    <span class="keyword-tag">Key Element (arr[i])</span>
+                    <span class="keyword-tag amber">Right Shift (arr[j+1] = arr[j])</span>
+                    <span class="keyword-tag green">Adaptive (Early Exit)</span>
+                    <span class="keyword-tag green">Online Algorithm</span>
+                    <span class="keyword-tag green">Stable Sorting</span>
+                  </div>
+                </div>
+
+                <div class="talking-point-banner">
+                  <span class="label">Talking Point</span>
+                  <p>"Contrast with Selection Sort: Selection Sort scans forward to find the minimum; Insertion Sort takes the next item and walks backward into the sorted hand to insert it!"</p>
+                </div>
+
+                <div class="callout green">
+                  <strong>Why is it Stable?</strong>
+                  <p>When the key encounters an identical value, the backward shift condition <code>arr[j] > key</code> evaluates to false and stops. Equal elements maintain their exact original relative order!</p>
+                </div>
+              </div>
+
+              <!-- Right: Interactive Simulator & Code -->
+              <div class="panel">
+                <div class="visualizer-container">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="font-size: 14px; text-transform: uppercase; color: var(--actual);">Insertion Sort Simulator</strong>
+                    <div style="font-size: 11px; display:flex; gap: 8px;">
+                      <span style="color:var(--result)">■ Sorted</span>
+                      <span style="color:var(--growth)">■ Key</span>
+                      <span style="color:var(--focus)">■ Comparing</span>
+                    </div>
+                  </div>
+                  <div id="insertionVisualizerBars" class="visualizer-bars"></div>
+                  <div class="visualizer-controls">
+                    <span id="insStatusText" class="visualizer-status">Click 'Next Step' to slide and insert.</span>
+                    <div style="display: flex; gap: 6px;">
+                      <button id="insStepBtn" class="visualizer-btn primary">Next Step ›</button>
+                      <button id="insResetBtn" class="visualizer-btn">Reset</button>
+                    </div>
+                  </div>
+                </div>
+
+                <pre class="code-block"><code><span class="keyword">function</span> <span class="fn">insertionSort</span>(arr, n):
+  <span class="keyword">for</span> i = 1 <span class="keyword">to</span> n - 1:              <span class="comment">// Start at index 1</span>
+    key = arr[i]                   <span class="comment">// Pick card</span>
+    j = i - 1
+    <span class="keyword">while</span> j &gt;= 0 <span class="keyword">and</span> arr[j] &gt; key: <span class="comment">// Shift larger items</span>
+      arr[j + 1] = arr[j]
+      j = j - 1
+    arr[j + 1] = key               <span class="comment">// Insert key into slot</span></code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 5: TOPIC 4 — Insertion Sort Time Complexity (GeeksforGeeks)
+             ================================================================ -->
+        <section class="slide" data-title="Topic 4: Insertion Sort Complexity (GFG)"
+          data-notes="<strong>Classroom Talking Points for Topic 4 (GeeksforGeeks Reference):</strong><br>• <em>The Fundamental Law of Insertion Sort:</em> 'The time taken by Insertion Sort depends directly on how the elements are arranged in the array.'<br>• <em>Best Case (Sorted Array):</em> [1, 2, 3, 4, 5]. Outer loop runs n - 1 times. Inner while loop checks arr[j] > key, fails immediately on the first comparison! Exactly n - 1 comparisons, 0 shifts, O(n) time!<br>• <em>Average Case (Random):</em> On average each key shifts through half the sorted elements. Total shifts ≈ n(n - 1) / 4 ≈ n²/4. This grows proportional to n², hence O(n²)!<br>• <em>Worst Case (Reverse Sorted):</em> [5, 4, 3, 2, 1]. Every element must shift all the way to index 0. Total work: 1 + 2 + ... + (n-1) = n(n - 1)/2 = O(n²)!<br>• <em>Auxiliary Space:</em> O(1) in-place. Uses only temporary variables like 'key' and 'j'.">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 04 • GeeksforGeeks Grounded Reference</p>
+              <h2>Insertion Sort: Time &amp; Space Complexity Analysis</h2>
+            </div>
+            <span class="section-chip">Part 4 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="split-layout">
+              <!-- Left Column: Best, Average, Worst Breakdown -->
+              <div class="panel">
+                <div class="definition-card green">
+                  <strong>Best Case: O(n) Time — [Already Sorted]</strong>
+                  <p>
+                    Occurs when the input array is already sorted (e.g., <code>[1, 2, 3, 4, 5]</code>). Each element is compared only once with the item immediately before it. <strong>No shifting is required</strong>.
+                  </p>
+                  <div style="margin-top: 6px; font-family: ui-monospace; font-size: 13px; color: var(--result);">
+                    Comparisons: <strong>n - 1</strong> | Shifts: <strong>0</strong> | Time: <strong>O(n)</strong>
+                  </div>
+                </div>
+
+                <div class="definition-card amber">
+                  <strong>Average Case: O(n²) Time — [Random Order]</strong>
+                  <p>
+                    For each element, it compares and shifts some elements. On average, each element moves through <strong>about half</strong> of the elements in the sorted portion.
+                  </p>
+                  <div style="margin-top: 6px; font-family: ui-monospace; font-size: 13px; color: var(--growth);">
+                    Total Shifts: <strong>n(n - 1) / 4 ≈ n² / 4</strong> | Time: <strong>O(n²)</strong>
+                  </div>
+                </div>
+
+                <div class="definition-card" style="border-top-color: var(--danger);">
+                  <strong style="color: var(--danger);">Worst Case: O(n²) Time — [Reverse Sorted]</strong>
+                  <p>
+                    Occurs when sorted in descending order (e.g., <code>[5, 4, 3, 2, 1]</code>). Each new element must be compared and shifted past all elements before it.
+                  </p>
+                  <div style="margin-top: 6px; font-family: ui-monospace; font-size: 13px; color: var(--danger);">
+                    Total Work: <strong>1 + 2 + ... + (n - 1) = n(n - 1) / 2</strong> | Time: <strong>O(n²)</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: GeeksforGeeks Summary Table & Space Analysis -->
+              <div class="panel">
+                <div class="definition-card" style="border-top-color: var(--actual);">
+                  <strong style="color: var(--actual);">GeeksforGeeks Official Master Matrix</strong>
+                  <p>Direct comparison of comparisons, shifts, and memory overhead:</p>
+                </div>
+
+                <table class="editorial-table">
+                  <thead>
+                    <tr>
+                      <th>Case</th>
+                      <th>Comparisons / Shifts</th>
+                      <th>Time</th>
+                      <th>Auxiliary Space</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Best Case</strong></td>
+                      <td><code>n - 1</code></td>
+                      <td><code style="color: var(--result);">O(n)</code></td>
+                      <td><code>O(1)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Average Case</strong></td>
+                      <td><code>≈ n² / 4</code></td>
+                      <td><code style="color: var(--growth);">O(n²)</code></td>
+                      <td><code>O(1)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Worst Case</strong></td>
+                      <td><code>n(n - 1) / 2</code></td>
+                      <td><code style="color: var(--danger);">O(n²)</code></td>
+                      <td><code>O(1)</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="callout green" style="margin-top: 10px;">
+                  <strong>Auxiliary Space Analysis (Per GeeksforGeeks):</strong>
+                  <p>
+                    Insertion Sort sorts in-place; it does not allocate an extra array. It requires only a few scalar variables such as <code>key</code> and <code>j</code>. Hence, extra memory remains constant: <strong>O(1) Auxiliary Space</strong>.
+                  </p>
+                </div>
+
+                <div class="talking-point-banner">
+                  <span class="label">GFG Insight</span>
+                  <p>"Insertion Sort is adaptive: its running time scales gracefully with the number of inversions in the array!"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 6: TOPIC 5 — Recursion and Divide-and-Conquer
+             ================================================================ -->
+        <section class="slide" data-title="Topic 5: Divide-and-Conquer Paradigm"
+          data-notes="<strong>Classroom Talking Points for Topic 5:</strong><br>• <em>The 3 Steps:</em> 1. DIVIDE (cut problem into smaller subproblems), 2. CONQUER (solve recursively or directly if base case), 3. COMBINE (put answers together).<br>• <em>The Base Case Rule:</em> Recursion without a basecase is like a car with no brakes. Each call adds a stack frame to memory. Without a base case, you trigger a Stack Overflow!<br>• <em>Recurrence Relations:</em> T(n) = 2T(n/2) + O(n). We express recursive time as: work on subproblems + work to split and merge.">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 05 • Algorithmic Paradigms</p>
+              <h2>The Divide-and-Conquer Paradigm: Principles &amp; Recurrence</h2>
+            </div>
+            <span class="section-chip">Part 5 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-3-col">
+              <!-- Pillar 1: Divide -->
+              <div class="panel">
+                <div class="definition-card" style="border-top-color: var(--actual);">
+                  <strong style="color: var(--actual);">1. Divide (Split)</strong>
+                  <p>
+                    Break the original large problem into smaller, non-overlapping subproblems that are smaller instances of the same problem.
+                  </p>
+                </div>
+                <div class="formula">mid = (left + right) / 2</div>
+                <p style="font-size: 14px; color: var(--muted); margin: 0;">
+                  Usually cuts the input size in half, $n \to n/2$. Cost of division is typically trivial $O(1)$.
+                </p>
+              </div>
+
+              <!-- Pillar 2: Conquer -->
+              <div class="panel">
+                <div class="definition-card" style="border-top-color: var(--growth);">
+                  <strong style="color: var(--growth);">2. Conquer (Recurse)</strong>
+                  <p>
+                    Solve the subproblems recursively. If the subproblem size is small enough (the <strong>base case</strong>), solve it straightforwardly without further recursion.
+                  </p>
+                </div>
+                <div class="formula amber">if (left &gt;= right) return;</div>
+                <p style="font-size: 14px; color: var(--muted); margin: 0;">
+                  A single element or empty list is already sorted! Base cases prevent infinite recursion.
+                </p>
+              </div>
+
+              <!-- Pillar 3: Combine -->
+              <div class="panel">
+                <div class="definition-card" style="border-top-color: var(--result);">
+                  <strong style="color: var(--result);">3. Combine (Merge)</strong>
+                  <p>
+                    Merge or assemble the solutions of the smaller subproblems into the solution for the original larger problem.
+                  </p>
+                </div>
+                <div class="formula green">merge(arr, left, mid, right)</div>
+                <p style="font-size: 14px; color: var(--muted); margin: 0;">
+                  In Merge Sort, <strong>all actual sorting happens here</strong> in linear $O(n)$ time!
+                </p>
+              </div>
+            </div>
+
+            <!-- Recurrence Relation Callout -->
+            <div class="split-layout" style="margin-top: 10px;">
+              <div class="talking-point-banner">
+                <span class="label">Recurrence</span>
+                <p>"We model Divide-and-Conquer mathematically using recurrence relations: T(n) = a·T(n/b) + f(n), where 'a' is subproblems, 'n/b' is subproblem size, and 'f(n)' is divide/combine cost."</p>
+              </div>
+
+              <div class="callout amber">
+                <strong>Divide-and-Conquer vs. Dynamic Programming:</strong>
+                <p>Divide-and-Conquer applies when subproblems are <strong>independent and disjoint</strong> (no overlap). Dynamic Programming is used when subproblems <strong>overlap</strong> and need memoization.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 7: TOPIC 6 — Merge Sort Algorithm
+             ================================================================ -->
+        <section class="slide" data-title="Topic 6: Merge Sort Algorithm"
+          data-notes="<strong>Classroom Talking Points for Topic 6:</strong><br>• <em>The Big Insight:</em> Dividing is free! The mid calculation does zero sorting. All the intelligence of Merge Sort lives inside the <code>merge()</code> procedure.<br>• <em>Two-pointer zipper:</em> Picture two sorted decks of cards face up. You compare the top cards, take the smaller one, and advance that pointer. It takes linear O(n) time!<br>• <em>Stability guarantee:</em> If L[i] <= R[j], pick L[i]! The '<=' ensures ties break in favor of the earlier element, preserving stability.">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 06 • Divide-and-Conquer Sorting</p>
+              <h2>Merge Sort: Two-Way Merging &amp; Recursive Splitting</h2>
+            </div>
+            <span class="section-chip">Part 6 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="split-layout">
+              <!-- Left: Algorithm Architecture & Steps -->
+              <div class="panel">
+                <div class="definition-card">
+                  <strong>Definition to Explain in Class:</strong>
+                  <p>
+                    Merge Sort is a recursive divide-and-conquer algorithm that continually divides an array into two equal halves until each subarray has only 1 element, then <strong>merges the sorted halves</strong> back together.
+                  </p>
+                </div>
+
+                <div class="keywords-tag-container">
+                  <span class="keyword-tag">Midpoint Split</span>
+                  <span class="keyword-tag">Base Case (left &gt;= right)</span>
+                  <span class="keyword-tag amber">Two-Pointer Merge</span>
+                  <span class="keyword-tag green">Stable (L[i] &lt;= R[j])</span>
+                  <span class="keyword-tag green">Guaranteed O(n log n)</span>
+                  <span class="keyword-tag danger">O(n) Auxiliary Array</span>
+                </div>
+
+                <div class="callout green">
+                  <strong>The Two-Pointer Linear Merge O(n):</strong>
+                  <p>Maintain pointer <code>i</code> on left array and <code>j</code> on right array. Compare <code>L[i]</code> and <code>R[j]</code>, copy the smaller to main array, and advance that pointer. Each element is examined once!</p>
+                </div>
+
+                <div class="talking-point-banner">
+                  <span class="label">Talking Point</span>
+                  <p>"Tell the class: An array of 1 element is already sorted by definition. Merge Sort breaks everything down to trivial size-1 arrays, then merges sorted pairs upward!"</p>
+                </div>
+              </div>
+
+              <!-- Right: Clean Pseudocode Structure -->
+              <div class="panel">
+                <pre class="code-block" style="font-size: 13px;"><code><span class="keyword">function</span> <span class="fn">mergeSort</span>(arr, left, right):
+  <span class="keyword">if</span> left &lt; right:
+    mid = (left + right) / 2
+    <span class="fn">mergeSort</span>(arr, left, mid)        <span class="comment">// Sort left half</span>
+    <span class="fn">mergeSort</span>(arr, mid + 1, right)    <span class="comment">// Sort right half</span>
+    <span class="fn">merge</span>(arr, left, mid, right)      <span class="comment">// Linear merge O(n)</span>
+
+<span class="keyword">function</span> <span class="fn">merge</span>(arr, left, mid, right):
+  create temp arrays L and R
+  i = 0, j = 0, k = left
+  <span class="keyword">while</span> i &lt; n1 <span class="keyword">and</span> j &lt; n2:
+    <span class="keyword">if</span> L[i] &lt;= R[j]:                 <span class="comment">// &lt;= guarantees STABILITY!</span>
+      arr[k++] = L[i++]
+    <span class="keyword">else</span>:
+      arr[k++] = R[j++]
+  copy remaining elements of L and R into arr</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 8: TOPIC 7 — Merge Sort Recursion Tree and Time Complexity
+             ================================================================ -->
+        <section class="slide" data-title="Topic 7: Merge Sort Recursion Tree"
+          data-notes="<strong>Classroom Talking Points for Topic 7:</strong><br>• <em>Drawing the tree:</em> Start at the top with size n. Row 1 splits into two n/2 blocks. Row 2 splits into four n/4 blocks. How many times can you cut n in half? log2(n) times!<br>• <em>Cost per level:</em> Level 0 costs c·n. Level 1 has 2 subproblems of size n/2: 2·c(n/2) = c·n. Level 2 has 4 subproblems of size n/4: 4·c(n/4) = c·n. EVERY LEVEL COSTS EXACTLY c·n!<br>• <em>The Grand Total:</em> (Height of Tree) × (Work per Level) = log2(n) × c·n = O(n log n)!<br>• <em>Best, Average, and Worst:</em> It doesn't matter what numbers are inside—it ALWAYS splits and merges in O(n log n).">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 07 • Recursion Tree &amp; Complexity</p>
+              <h2>Merge Sort Recursion Tree: Why it is Universally O(n log n)</h2>
+            </div>
+            <span class="section-chip">Part 7 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="split-layout">
+              <!-- Left: Visual Recursion Tree Diagram in HTML/CSS -->
+              <div class="panel">
+                <div style="background: var(--paper-bright); border: 1px solid var(--line); padding: 14px; border-radius: 4px;">
+                  <strong style="display:block; font-size:13px; text-transform:uppercase; color:var(--actual); margin-bottom:10px;">
+                    Recursion Tree Work per Level
+                  </strong>
+                  
+                  <div style="display:grid; gap: 8px; font-family: ui-monospace; font-size: 13px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(36,95,128,0.08); padding:8px 12px; border-radius:3px;">
+                      <span>Level 0: <strong>[ n ]</strong></span>
+                      <span style="color:var(--result);">Cost = c · n</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(36,95,128,0.08); padding:8px 12px; border-radius:3px;">
+                      <span>Level 1: <strong>[ n/2 ] + [ n/2 ]</strong></span>
+                      <span style="color:var(--result);">Cost = 2 · c(n/2) = c · n</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(36,95,128,0.08); padding:8px 12px; border-radius:3px;">
+                      <span>Level 2: <strong>4 × [ n/4 ]</strong></span>
+                      <span style="color:var(--result);">Cost = 4 · c(n/4) = c · n</span>
+                    </div>
+                    <div style="text-align:center; color:var(--muted); font-size:16px;">⋮ (log₂ n total levels of division)</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(39,112,90,0.12); padding:8px 12px; border-radius:3px; border-left:4px solid var(--result);">
+                      <span>Base Level: <strong>n × [ 1 ]</strong></span>
+                      <span style="color:var(--result); font-weight:bold;">Cost = n · c(1) = c · n</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="formula green" style="margin-top: 10px;">
+                  $$\text{Total Time} = (\log_2 n \text{ levels}) \times (c \cdot n \text{ work/level}) = \Theta(n \log n)$$
+                </div>
+              </div>
+
+              <!-- Right: Mathematical Proof & Master Theorem -->
+              <div class="panel">
+                <div class="definition-card">
+                  <strong>Recurrence Relation via Master Theorem:</strong>
+                  <p>The time complexity is governed by the recurrence:</p>
+                </div>
+
+                <div class="formula amber">
+                  $$T(n) = 2T(n/2) + \Theta(n)$$
+                </div>
+
+                <p style="font-size: 14px; color: var(--muted); margin: 0;">
+                  Here, $a = 2$ (two subproblems), $b = 2$ (divided in half), and $f(n) = \Theta(n)$ (linear merge cost). Since $\log_b a = \log_2 2 = 1$, Case 2 of the Master Theorem applies: <strong>$\Theta(n^{\log_b a} \log n) = \Theta(n \log n)$</strong>.
+                </p>
+
+                <table class="editorial-table" style="margin-top: 10px;">
+                  <thead>
+                    <tr>
+                      <th>Scenario</th>
+                      <th>Time Complexity</th>
+                      <th>Auxiliary Space</th>
+                      <th>Stability</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Best Case</td>
+                      <td><code>Ω(n log n)</code></td>
+                      <td><code>O(n)</code></td>
+                      <td>Stable</td>
+                    </tr>
+                    <tr>
+                      <td>Average Case</td>
+                      <td><code>Θ(n log n)</code></td>
+                      <td><code>O(n)</code></td>
+                      <td>Stable</td>
+                    </tr>
+                    <tr>
+                      <td>Worst Case</td>
+                      <td><code>O(n log n)</code></td>
+                      <td><code>O(n)</code></td>
+                      <td>Stable</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 9: TOPIC 8 — Comparing and Choosing Sorting Algorithms
+             ================================================================ -->
+        <section class="slide" data-title="Topic 8: Master Decision Matrix"
+          data-notes="<strong>Classroom Talking Points for Topic 8:</strong><br>• <em>Decision Rule 1:</em> Small data (n < 50) or nearly sorted? Choose INSERTION SORT. Lowest constant factor, zero extra memory, runs in O(n) time.<br>• <em>Decision Rule 2:</em> Write operations are deadly expensive (flash memory)? Choose SELECTION SORT. At most n - 1 swaps.<br>• <em>Decision Rule 3:</em> Large scale data, strictly guaranteed O(n log n) performance, or stable sorting needed? Choose MERGE SORT.<br>• <em>Real-world Capstone:</em> Mention TIMSORT! Python and Java use a hybrid that combines Merge Sort + Insertion Sort!">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Topic 08 • Strategic Algorithmic Selection</p>
+              <h2>Master Decision Matrix: How to Choose the Right Algorithm</h2>
+            </div>
+            <span class="section-chip">Part 8 of 8</span>
+          </div>
+
+          <div class="slide-body">
+            <!-- Full Comprehensive Comparison Table -->
+            <table class="editorial-table">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>Best Time</th>
+                  <th>Average Time</th>
+                  <th>Worst Time</th>
+                  <th>Auxiliary Space</th>
+                  <th>Stable?</th>
+                  <th>In-Place?</th>
+                  <th>Primary Superpower</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Selection Sort</strong></td>
+                  <td><code>O(n²)</code></td>
+                  <td><code>O(n²)</code></td>
+                  <td><code>O(n²)</code></td>
+                  <td><code>O(1)</code></td>
+                  <td><span style="color:var(--danger)">No</span></td>
+                  <td><span style="color:var(--result)">Yes</span></td>
+                  <td>Minimizes writes (≤ n-1 swaps).</td>
+                </tr>
+                <tr>
+                  <td><strong>Insertion Sort</strong></td>
+                  <td><code style="color:var(--result);">O(n)</code></td>
+                  <td><code>O(n²)</code></td>
+                  <td><code>O(n²)</code></td>
+                  <td><code>O(1)</code></td>
+                  <td><span style="color:var(--result)">Yes</span></td>
+                  <td><span style="color:var(--result)">Yes</span></td>
+                  <td>Adaptive, online, blazingly fast on small/nearly sorted data.</td>
+                </tr>
+                <tr>
+                  <td><strong>Merge Sort</strong></td>
+                  <td><code style="color:var(--result);">O(n log n)</code></td>
+                  <td><code style="color:var(--result);">O(n log n)</code></td>
+                  <td><code style="color:var(--result);">O(n log n)</code></td>
+                  <td><code>O(n)</code></td>
+                  <td><span style="color:var(--result)">Yes</span></td>
+                  <td><span style="color:var(--danger)">No</span></td>
+                  <td>Guaranteed O(n log n) worst-case time &amp; stable.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="grid-3-col" style="margin-top: 10px;">
+              <div class="panel" style="padding: 14px 18px;">
+                <strong style="color: var(--actual); font-size: 14px;">When to Pick Insertion Sort</strong>
+                <p style="font-size: 13px; margin: 0; color: var(--muted);">
+                  Small arrays ($n < 50$), data that is already almost sorted, or streaming data arriving continuously one item at a time.
+                </p>
+              </div>
+
+              <div class="panel" style="padding: 14px 18px;">
+                <strong style="color: var(--growth); font-size: 14px;">When to Pick Selection Sort</strong>
+                <p style="font-size: 13px; margin: 0; color: var(--muted);">
+                  Embedded systems or EEPROM flash memory where disk write cycles wear down physical storage ($O(n)$ maximum writes).
+                </p>
+              </div>
+
+              <div class="panel" style="padding: 14px 18px;">
+                <strong style="color: var(--result); font-size: 14px;">When to Pick Merge Sort</strong>
+                <p style="font-size: 13px; margin: 0; color: var(--muted);">
+                  Large datasets requiring strict $O(n \log n)$ upper bounds, sorting linked lists (where extra space is $O(1)$), or multi-attribute stable sorts.
+                </p>
+              </div>
+            </div>
+
+            <div class="talking-point-banner" style="margin-top: 10px;">
+              <span class="label">Industry Fact</span>
+              <p>"Why choose between them? Python's <code>sorted()</code> and Java's <code>Arrays.sort()</code> use TIMSORT—a hybrid that splits data into chunks, sorts them with Insertion Sort, and merges them with Merge Sort!"</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 10: Classroom Review & Quiz Launch
+             ================================================================ -->
+        <section class="slide" data-title="Review & 30-Item Timed Quiz"
+          data-notes="Announce the quiz to the class! 30 comprehensive items covering all 8 topics, with exactly 1 minute countdown per item. You can pause the timer for questions, toggle sound effects, and review full explanations after each item. Good luck!">
+          <div class="slide-header">
+            <div class="header-left">
+              <p class="kicker">Chapter 5 • Capstone Assessment</p>
+              <h2>Classroom Assessment: 30-Item Timed Quiz</h2>
+            </div>
+            <span class="section-chip">Final Step</span>
+          </div>
+
+          <div class="slide-body">
+            <div class="split-layout">
+              <div class="panel">
+                <div class="definition-card" style="border-top-color: var(--focus);">
+                  <strong style="color: var(--focus); font-size: 24px;">Classroom Quiz Rules &amp; Features</strong>
+                  <p style="font-size: 16px; line-height: 1.5;">
+                    Test your mastery of Chapter 5 with our interactive assessment engine:
+                  </p>
+                  <ul style="margin: 12px 0 0 20px; font-size: 15px; line-height: 1.6; color: var(--muted);">
+                    <li><strong>30 Multiple-Choice Questions</strong> balanced across all 8 chapter topics.</li>
+                    <li><strong>1-Minute Countdown Timer</strong> per item with visual ring and audio cue.</li>
+                    <li><strong>Instant Feedback Mode</strong> with detailed explanations and classroom talking points.</li>
+                    <li><strong>Question Palette</strong> allowing instant jumping and review.</li>
+                    <li><strong>Final Scorecard</strong> with topic-by-topic mastery breakdown!</li>
+                  </ul>
+                </div>
+
+                <div class="talking-point-banner">
+                  <span class="label">Presenter Note</span>
+                  <p>"Teachers can use the 'Pause Timer' button in the header if students have questions during class!"</p>
+                </div>
+              </div>
+
+              <div class="panel" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 20px;">
+                <div style="font-family: Georgia, serif; font-size: 54px; color: var(--actual); line-height: 1;">
+                  30 Items
+                </div>
+                <div style="font-family: ui-monospace; font-size: 22px; color: var(--growth);">
+                  ⏱ 60 Seconds / Item
+                </div>
+                <p style="font-size: 16px; color: var(--muted); max-width: 400px; margin: 0;">
+                  Ready to test your knowledge or run this live with your classmates? Click below to launch!
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                  <button onclick="document.getElementById('openQuizBtn').click()" class="deck-btn quiz-accent" style="font-size: 18px; padding: 14px 32px; border-radius: 4px;">
+                    🚀 Launch 30-Item Timed Quiz Now
+                  </button>
+                  <a href="answer-key.html" target="_blank" class="deck-btn" style="font-size: 16px; padding: 14px 24px; border-radius: 4px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    🔑 View Official Answer Key
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div> <!-- /slide-container -->
+
+      <!-- ================================================================
+           SPEAKER NOTES DRAWER (Slides up for teacher/presenter)
+           ================================================================ -->
+      <aside id="speakerNotesDrawer" class="speaker-notes-drawer" aria-label="Classroom Speaker Notes">
+        <div class="speaker-notes-header">
+          <span>🎤 Classroom Talking Points &amp; Speaker Notes</span>
+          <button id="notesCloseBtn" aria-label="Close speaker notes">✕</button>
+        </div>
+        <div id="speakerNotesContent" class="speaker-notes-content">
+          <!-- Populated by app.js -->
+        </div>
+      </aside>
+
+      <!-- ================================================================
+           BOTTOM DECK CONTROLS BAR (Matches reference layout)
+           ================================================================ -->
+      <footer class="deck-controls">
+        <div class="deck-identity">
+          <strong>CS 05 • CH 5</strong>
+          <span id="currentSlideTitle">Chapter 5: Overview &amp; Agenda</span>
+        </div>
+
+        <div class="slide-picker">
+          <label for="slideSelect">Slide</label>
+          <select id="slideSelect" aria-label="Select Slide to Jump to"></select>
+          <output id="slideOutput">01 / 10</output>
+        </div>
+
+        <div class="control-buttons">
+          <button id="notesToggleBtn" class="deck-btn" title="Toggle Classroom Speaker Notes (Key: S)">
+            🎤 Speaker Notes
+          </button>
+          <button id="prevBtn" class="deck-btn" title="Previous Slide (Left Arrow, Key: P)">
+            ‹ Prev
+          </button>
+          <button id="nextBtn" class="deck-btn primary" title="Next Slide (Right Arrow, Space, Key: N)">
+            Next ›
+          </button>
+          <button id="openQuizBtn" class="deck-btn quiz-accent" title="Launch 30-Item Quiz (Key: Q)">
+            ⏱ Quiz (30 Qs)
+          </button>
+          <a href="answer-key.html" target="_blank" class="deck-btn" title="Open Complete 30-Question Answer Key (Opens in new tab)" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            🔑 Answer Key
+          </a>
+          <button id="fullscreenBtn" class="deck-btn" title="Toggle Fullscreen (Key: F)">
+            ⛶
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <!-- ================================================================
+         30-ITEM INTERACTIVE QUIZ OVERLAY WITH 1-MINUTE TIMER
+         ================================================================ -->
+    <div id="quizOverlay" class="quiz-overlay" role="dialog" aria-modal="true" aria-label="Interactive Chapter Quiz">
+      <div class="quiz-shell">
+        <!-- Quiz Header -->
+        <header class="quiz-header">
+          <div class="quiz-header-title">
+            <span>CS 05 Assessment</span>
+            <strong>Chapter 5: Sorting &amp; Divide-and-Conquer Quiz</strong>
+          </div>
+
+          <!-- Circular SVG 1-Minute Timer -->
+          <div class="quiz-header-center">
+            <div class="timer-container" title="60-second timer per question">
+              <svg class="timer-svg" viewBox="0 0 40 40">
+                <circle class="timer-circle-bg" cx="20" cy="20" r="16"></circle>
+                <circle id="timerCircleProgress" class="timer-circle-progress" cx="20" cy="20" r="16"></circle>
+              </svg>
+              <span id="timerText" class="timer-text">60s</span>
+            </div>
+            <button id="quizTimerPause" class="quiz-header-btn">⏸ Pause Timer</button>
+            <button id="quizSoundToggle" class="quiz-header-btn">🔊 Sound: ON</button>
+          </div>
+
+          <div class="quiz-header-controls" style="display: flex; gap: 8px; align-items: center;">
+            <a href="answer-key.html" target="_blank" class="quiz-header-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(39, 112, 90, 0.4); border-color: #27705a; color: #5ed6b0;" title="Open Official Answer Key">
+              🔑 Answer Key
+            </a>
+            <button id="closeQuizBtn" class="quiz-header-btn" style="background:#b54132; color:#fff; border-color:#b54132;">✕ Close Quiz</button>
+          </div>
+        </header>
+
+        <!-- Quiz Progress Bar -->
+        <div class="quiz-progress-bar">
+          <div id="quizProgressFill" class="quiz-progress-fill"></div>
+        </div>
+
+        <!-- 30-Item Question Navigation Strip -->
+        <nav id="quizPalette" class="quiz-palette-bar" aria-label="Question Navigation Palette"></nav>
+
+        <!-- Quiz Question Active Body -->
+        <div id="quizBody" class="quiz-body">
+          <div class="quiz-meta">
+            <span id="quizTopicTag" class="topic-tag">Topic: Selection Sort Algorithm</span>
+            <span style="font-family: ui-monospace;">⏱ 1 Minute Per Question</span>
+          </div>
+
+          <h3 id="quizQuestionTitle" class="quiz-question-title">
+            Loading question...
+          </h3>
+
+          <!-- 4 Options Grid -->
+          <div id="quizOptionsContainer" class="options-grid"></div>
+
+          <!-- Immediate Feedback Box -->
+          <div id="quizFeedback" class="quiz-feedback">
+            <div id="quizFeedbackTitle" class="quiz-feedback-title">✓ Correct!</div>
+            <p id="quizFeedbackText">Explanation text goes here.</p>
+            <small id="quizFeedbackTip">Classroom Talking Point: ...</small>
+          </div>
+        </div>
+
+        <!-- Quiz Completed Results Screen -->
+        <div id="quizResultsScreen" class="quiz-results-screen">
+          <p class="kicker" style="color:var(--actual); font-size:16px;">Assessment Complete</p>
+          <div id="resultsScoreNumber" class="results-badge">85%</div>
+          <p id="resultsRating" class="results-lead">
+            Outstanding Mastery! You are ready to present this chapter with confidence in front of the class.
+          </p>
+
+          <table class="topic-breakdown-table">
+            <thead>
+              <tr>
+                <th>Topic Category</th>
+                <th>Correct Items</th>
+                <th>Mastery Percentage</th>
+              </tr>
+            </thead>
+            <tbody id="topicBreakdownTbody">
+              <!-- Populated by app.js -->
+            </tbody>
+          </table>
+
+          <div class="results-actions">
+            <button id="reviewAllQuestionsBtn" class="deck-btn primary" style="font-size: 15px; padding: 10px 20px;">
+              🔍 Review All 30 Answers &amp; Talking Points
+            </button>
+            <a href="answer-key.html" target="_blank" class="deck-btn quiz-accent" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; padding: 10px 20px;">
+              🔑 View Full Answer Key
+            </a>
+            <button id="retakeQuizBtn" class="deck-btn" style="font-size: 15px; padding: 10px 20px;">
+              🔄 Retake Quiz
+            </button>
+          </div>
+        </div>
+
+        <!-- Quiz Footer -->
+        <footer class="quiz-footer">
+          <div id="quizCurrentScore" class="quiz-score-live">
+            Score: <strong>0 / 0</strong> (of 30)
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button id="quizPrevBtn" class="deck-btn">‹ Previous Question</button>
+            <button id="quizNextBtn" class="deck-btn primary">Next Question ›</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application scripts -->
+  <script src="slides-data.js"></script>
+  <script src="visualizer.js"></script>
+  <script src="quiz-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
